@@ -9,6 +9,11 @@
   "author": "Dipesh Pal",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "dotenv": "^16.4.5",
     "prettier": "^3.3.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.15.0"
   }
 }
