@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 
@@ -14,12 +15,14 @@ model Note{
   content String @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author User @relation(fields: [authorId], references: [id])
+  author Owner @relation(fields: [authorId], references: [id])
   authorId  Int
 }
-model User{
+model Owner{
   id  Int @id @default(autoincrement()) //primary key
   email String @unique
   password String
+  refreshToken String?
   notes Note[]
 }
+
