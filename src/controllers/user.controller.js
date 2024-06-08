@@ -57,6 +57,12 @@ export const SignUp = async (req, res, next) => {
         if (!password) {
             throw new ApiError(400, "Password is required");
         }
+        const existingUser = await prisma.findUnique({
+            where:{email:email}
+        })
+        if(existingUser){
+            throw new ApiError(400,"User already existed")
+        }
         const hashedPassword = await getHashedPassword(password);
         const user = await prisma.owner.create({
             data: {
@@ -120,6 +126,6 @@ export const login = async (req, res, next) => {
             .json(new ApiResponse(200, "Login Successful", { user: loggedInUser, accesstoken, refreshtoken }));
     } catch (error) {
         console.log(error);
-        next(new ApiError(500, "Something went wrong"));
+        next(new ApiError(500, "Something went wrong" + error));
     }
 };
