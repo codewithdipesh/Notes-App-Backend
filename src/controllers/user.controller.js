@@ -57,7 +57,7 @@ export const SignUp = async (req, res, next) => {
         if (!password) {
             throw new ApiError(400, "Password is required");
         }
-        const existingUser = await prisma.findUnique({
+        const existingUser = await prisma.owner.findUnique({
             where:{email:email}
         })
         if(existingUser){
@@ -86,7 +86,7 @@ export const SignUp = async (req, res, next) => {
         );
     } catch (error) {
         console.log(error);
-        next(new ApiError(500, "Something went wrong"));
+        next(new ApiError(500, "Something went wrong"+error.message));
     }
 };
 
@@ -129,3 +129,46 @@ export const login = async (req, res, next) => {
         next(new ApiError(500, "Something went wrong" + error));
     }
 };
+
+export const changePassword = async(req,res,next)=>{
+   try {
+     const {oldpassword,newpassword} = req.body
+     const user = await prisma.owner.findUnique({
+         where:{id:req.user.id}
+     })
+     const isPasswordCorrect = await IsPasswordCorrect(oldpassword,user.password)
+     
+     if (!isPasswordCorrect) {
+         throw new ApiError(400, "Invalid old password")
+     }
+     const newhashedPassword = await getHashedPassword(newpassword)
+     const updateduser = await prisma.owner.update({
+         where:{id:user.id},
+         data:{
+             password:newhashedPassword
+         }
+     })
+     if(!updateduser){
+         throw new ApiError(500,"Cant change the password")
+     }
+     return res.status(200).json(
+         new ApiResponse(200,"Password changed successfully",{})
+     )
+   } catch (error) {
+     throw new ApiError(500,"Soemthing wrong happen_"+error?.message)
+   }
+}
+
+export const logout = async(req,res,next)=>{
+    await prisma.owner.update({
+        where:{id:req.user.id},
+        data:{refreshToken:null}
+    })
+    const options = {httpOnly:true,secure:true}
+    return res.status(200)
+    .clearCookie("accesstoken",options)
+    .clearCookie("refreshtoken",options)
+    .json(
+        new ApiResponse(200,"User logged Out sucessfully",{})
+    )
+}
