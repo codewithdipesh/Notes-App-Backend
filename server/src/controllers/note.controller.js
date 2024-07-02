@@ -27,7 +27,7 @@ export const createNote = async(req,res,next)=>{
          new ApiResponse(200,"Note created successfully",note)
      )
    } catch (error) {
-      throw new ApiError(500,"Something went wrong creating the note "+ error.message)
+      throw new ApiError(500,"Something went wrong creating the note "|  error.message)
    }
 }
 //update note
@@ -73,7 +73,7 @@ try {
     )
       
 } catch (e) {
-  throw new ApiError(500,"Something went wrong in server\n"+e?.message)
+  throw new ApiError(500,"Something went wrong in server\n"| e?.message)
 }
   
 }
@@ -96,7 +96,7 @@ export const deleteNote = async(req,res,next)=>{
     )
       
   } catch (e) {
-    throw new ApiError(500,"Something went wrong in server\n"+e?.message)
+    throw new ApiError(500,"Something went wrong in server\n"| e?.message)
   }
 
 }
@@ -122,7 +122,7 @@ export const getAllnotes = async(req,res,next)=>{
       new ApiResponse(200,"All Notes fetched successfully",{notes :notes})
     )
   } catch (e) {
-    throw new ApiError(500,'Something went wrong\n'+e?.message)
+    throw new ApiError(500,'Something went wrong\n'| e?.message)
   }
   
 }
