@@ -86,7 +86,7 @@ export const SignUp = async (req, res, next) => {
         );
     } catch (error) {
         console.log(error);
-        next(new ApiError(500, "Something went wrong" || error.message));
+        next(new ApiError(500, error.message ||  "Something went wrong"));
     }
 };
 
@@ -126,7 +126,7 @@ export const login = async (req, res, next) => {
             .json(new ApiResponse(200, "Login Successful", { user: loggedInUser, accesstoken, refreshtoken }));
     } catch (error) {
         console.log(error);
-        next(new ApiError(500, "Something went wrong" || error.message));
+        next(new ApiError(500, error.message ||  "Something went wrong"));
     }
 };
 
@@ -155,7 +155,7 @@ export const changePassword = async(req,res,next)=>{
          new ApiResponse(200,"Password changed successfully",{})
      )
    } catch (error) {
-     throw new ApiError(500,"Soemthing wrong happen_" || error?.message)
+     throw new ApiError(500,error.message ||  "Something went wrong")
    }
 }
 
